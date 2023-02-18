@@ -1,1 +1,0 @@
-### Untuk rangkuman silahkan kunjungi repo berikut https://github.com/widhofaisal/learn-golang
