@@ -1,7 +1,8 @@
+# Section 6 - Version Control and Branch Management (Git)
+
+## Video KMGolang – Version Control and Branch Management (Git) (1:26:51)
 
 ### **VERSION CONTROL** adalah suatu tools untuk melakukan tracking terhadap history perubahan file, biasa dimanfaatkan programmer pada file coding
-
-<br/>
 
 ### 3 jenis **Version Control** :
 - local version control
