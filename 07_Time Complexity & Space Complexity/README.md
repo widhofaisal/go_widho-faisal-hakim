@@ -83,3 +83,4 @@ Cara menghitung waktu proses berjalan (untuk research Time Complexity) :
 
 	time.Sleep(time.Second * 1)
 ```
+
