@@ -4,17 +4,23 @@ import (
 	"fmt"
 )
 
+// Time complexity dari sebuah fungsi perpangkatan harus lebih cepat dari O(n)
+// O(log n)
 func pow(x, n int) int {
 	if n == 0 {
 		return 1
+
 	} else if n == 1 {
 		return x
+
 	} else if n%2 == 0 {
 		y := pow(x, n/2)
 		return y * y
+
 	} else {
 		y := pow(x, (n-1)/2)
 		return x * y * y
+
 	}
 }
 
