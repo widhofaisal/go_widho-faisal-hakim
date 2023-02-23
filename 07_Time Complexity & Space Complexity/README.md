@@ -4,6 +4,11 @@
 
 **Time Complexity** adalah proses yang paling dominan, dilambangkan dengan O
 
+### Fun Fact :
+> "Time complexity yang lebih cepat belum tentu cepat dalam hitungan waktu (sekon). Karena time complexity diasumsikan dari seberapa banyak proses yang paling dominan di eksekusi. Bisa jadi model A looping nya sedikit tpi dalam setiap looping itu menjalankan proses yang banyak/besar/berat. Disamping itu model B looping nya banyak namun dalam setiap looping itu hanyak menjalankan proses yang kecil/ringan. Semuanya bersifat **RELATIF**." -Widho wkwk
+
+<br/>
+
 Jenis-jenis time complexity
 - Linear time : O(n)
     ```golang
@@ -124,10 +129,12 @@ Cara menghitung waktu proses berjalan (untuk research Time Complexity) :
     ```
 - lebih ringkas, dipisah di func lain :
 
-```golang
-    start := time.Now()
-	defer functions.Timer(start)
+    ```golang
+        start := time.Now()
+        defer functions.Timer(start)
 
-	time.Sleep(time.Second * 1)
-```
+        time.Sleep(time.Second * 1)
+    ```
+
+<br/>
 
