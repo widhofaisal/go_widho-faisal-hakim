@@ -20,9 +20,9 @@ func SelisihDiagonal(length int, arr []int) {
 		}
 		// fmt.Println(diagonal2)
 
-		result:=diagonal1-diagonal2
-		if result<0{
-			result*=-1
+		result := diagonal1 - diagonal2
+		if result < 0 {
+			result *= -1
 		}
 
 		// count the selisih
@@ -37,12 +37,20 @@ func SelisihDiagonal(length int, arr []int) {
 		fmt.Println("Diagonal kiri \t: ", temp1, " = ", diagonal1)
 		fmt.Println("Diagonal kanan \t: ", temp2, " = ", diagonal2)
 		fmt.Printf("NILAI MUTLAK \t:  |%d - %d| = %d\n\n\n", diagonal1, diagonal2, result)
+	} else {
+		fmt.Println("------------------------------------------")
+		fmt.Println("Maaf panjang arrayMatrix tidak sesuai\n\n")
 	}
 }
 
 func main() {
+	// SelisihDiagonal( ukuranMatrix, arrayMatrix)
+	// ukuranMatrix 	: harus sama misal 3x3 atau 5x5 dst
+	// arrayMatrix 		: len(arrayMatrix) harus sejumlah ukuranMatrix^2
+
 	SelisihDiagonal(3, []int{1, 2, 3, 4, 5, 6, 9, 8, 9})
 	SelisihDiagonal(3, []int{1, 2, 3, 4, 5, 6, 7, 8, 9})
 	SelisihDiagonal(4, []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16})
 	SelisihDiagonal(5, []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25})
+	SelisihDiagonal(5, []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25})
 }
