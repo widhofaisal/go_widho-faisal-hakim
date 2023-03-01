@@ -48,6 +48,26 @@ letter = letter[:6] + item1 + letter[5:]
 fmt.Println(letter)		// green high mountain
 ```
 
+```golang
+// shuffle string
+import (
+	"fmt"
+	"math/rand"
+)
+
+func main() {
+	alphabet := "abcdefghijklmnopqrstuvwxyz"
+	runes := []rune(alphabet)
+
+	rand.Shuffle(len(runes), func(i, j int) {
+		runes[i], runes[j] = runes[j], runes[i]
+	})
+
+	result := string(runes)
+	fmt.Println(result)
+}
+```
+
 <br/>
 
 ## Video – Advance Function (23:53)
