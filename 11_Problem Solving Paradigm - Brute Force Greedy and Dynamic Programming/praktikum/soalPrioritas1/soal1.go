@@ -1,36 +1,48 @@
 package main
 
-import (
-	"fmt"
-	"strconv"
-)
+import "fmt"
 
-func intToBinary(n int) []int {
-	// inisialisasi tabel
-	table := make([]int, n+1)
+// Dynamic Programming
+// Approach : Top-Down
 
-	for i := 0; i <= n; i++ {
-		fmt.Println("i",i)
-		
-		j:=i
-		var binary string
-		for j > 0 {
-			// Mendapatkan nilai modulus 2 dari bilangan bulat n
-			digit := j % 2
-			// Konversi digit ke string dan gabungkan ke variabel binary
-			binary = fmt.Sprintf("%d%s", digit, binary)
-			// Bagi n dengan 2 untuk mendapatkan bilangan bulat baru
-			j /= 2
-		}
-
-		temp3,_:=strconv.Atoi(binary)
-		table = append(table, temp3)
+// generate binary according to n
+func getBinary(n int, memo *[]string) []string {
+	result := fmt.Sprintf("%b", n)
+	*memo = append(*memo, result)
+	if n == 0 {
+		return *memo
+	} else {
+		getBinary(n-1, memo)
+		return []string{}
 	}
+}
 
-	return table[:n+1]
+// using memoization
+func setResult(n int, memo *[]string) []string {
+	if len(*memo) >= n {
+		return (*memo)[:n+1]
+	} else {
+		*memo = []string{}
+		getBinary(n, memo)
+		result := *memo
+		return reverseSlice(result)
+	}
+}
+
+// reverse the slice order
+func reverseSlice(s []string) []string {
+	for i := 0; i < len(s)/2; i++ {
+		j := len(s) - i - 1
+		s[i], s[j] = s[j], s[i]
+	}
+	return s
 }
 
 func main() {
-	fmt.Println(intToBinary(6))
-	fmt.Println(intToBinary(3))
+	memo := []string{}
+	fmt.Println(setResult(2, &memo))
+	fmt.Println(setResult(3, &memo))
+	fmt.Println(setResult(7, &memo))
+	fmt.Println(setResult(5, &memo))
+	fmt.Println(setResult(4, &memo))
 }
