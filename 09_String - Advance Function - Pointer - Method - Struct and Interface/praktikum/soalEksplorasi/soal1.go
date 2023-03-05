@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	// "strconv"
 	"strings"
 )
 
@@ -41,7 +40,7 @@ func (s *student) Encode() string {
 			nameEncode += target[i]
 		}
 	}
-
+	s.nameEncode=nameEncode
 	return nameEncode
 }
 

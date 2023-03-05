@@ -388,3 +388,7 @@ func main() {
         }
     }
     ```
+
+> di Golang kita bisa membuat custom data types
+
+> method dapat diasosiakan dengan tipe data tertentu dan dapat dipanggil pada variabel tipe data tersebut
