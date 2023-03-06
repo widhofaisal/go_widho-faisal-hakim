@@ -22,7 +22,7 @@ func MostAppearItem(items []string) []pair {
 			temp[item] += 1
 		}
 	}
-
+	
 	// convert map to struct pair
 	for key, value := range temp {
 		result = append(result, pair{name: key, count: value})

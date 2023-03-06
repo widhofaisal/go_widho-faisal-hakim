@@ -32,6 +32,7 @@ func (s *student) Encode() string {
 
 	for i := 0; i < len(s.name); i++ {
 		index := strings.Index(key, target[i])
+		fmt.Println(index)
 		if index >= 0 {
 			move := rune(index) + 'a'
 			nameEncode += string(move)
