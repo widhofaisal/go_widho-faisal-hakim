@@ -1,91 +1,160 @@
 # Section 12 - Concurrent Programing
 
-## Big Search Website
-- sequential : sebelum menjalankan task baru, task lama harus sudah selesai
-- paraller : banyak task dapat dijalankan bersamaan
-- concurrent : banyak task dapat dijalankan **independent** (terpisah) dan memungkinkan secara **simultaneous** (bersamaan) 
-
 ## Goroutine
+adalah mini thread atau lightweight
+- sequential : 
+  > menjalankan line code secara urut dari atas kebawah
+  
+  > sebelum menjalankan task baru, task lama harus sudah selesai
+- paraller : 
+  > banyak task dapat dijalankan bersamaan
+- concurrent : 
+  >banyak task dapat dijalankan **independent** (terpecah) tergantung bagian mana yang selesai terlebih dahulu
+
+<br/>
+<p align="center">
+<img title="flowchart-symbol" alt="flowchart-symbol"  width= "600px" src="https://lh4.googleusercontent.com/ZWoxcnEe63j5EK46Q1b2tJco3FsL8uK-q-uDkAV2hTtl5n0COuoOHYsJATTnbh-Bh6s=w2400">
+</p>
+
 
 ## Channel
-- Example 1
-    ```golang
-    package main
+> Channel digunakan untuk menghubungkan goroutine satu dengan goroutine lain. Mekanisme yang dilakukan adalah serah-terima data lewat channel tersebut. Dalam komunikasinya, sebuah channel difungsikan sebagai pengirim di sebuah goroutine, dan juga sebagai penerima di goroutine lainnya. Pengiriman dan penerimaan data pada channel bersifat blocking atau synchronous.
 
-    import (
-        "fmt"
-    )
+> Channel ibarat gudang yang menjadi tempat transit barang.
+```golang
+package main
 
-    func greet(c chan string) {
-        data := <-c
-        fmt.Println("Hello " + data + " !")
-    }
+import (
+	"fmt"
+	"time"
+)
 
-    func main() {
-        fmt.Println("Main() started")
-        c := make(chan string)
+func main() {
+	ch := make(chan int)
 
-        go greet(c)
+	sayHello := func(str string, n time.Duration) {
+		time.Sleep(n * time.Second)
+		result := 0
+		for i := range str {
+			result += i
+		}
+		ch <- result
+	}
 
-        c <- "john"
-        fmt.Println("Main() stopped")
-    }
+	go sayHello("abcdefgh", 5)             //harusnya: 28
+	go sayHello("abcd", 3)                 //harusnya: 6
+	go sayHello("abcdefghkahsahsahsas", 2) //harusnya: 190
 
-    ```
+	fmt.Println(<-ch) //output: 190
+	fmt.Println(<-ch) //output: 6
+	fmt.Println(<-ch) //output: 28
 
-- Example 2  
-    ```golang
+	// URUTAN JADI TERBALIK
+	// KARENA DURASI TIME SLEEP BERBEDA
+	// TIME SLEEP TERCEPAT YANG AKAN DI PRINT TERLEBIH DAHULU
+}
+```
+
+### Ada dua macam penerapan channel di golang :
+1. Unbuffered Channel
+   ```golang
+   // Unbuffered channel (kanal tak berbuffer) adalah jenis channel yang menunggu hingga goroutine penerima siap untuk menerima data sebelum goroutine pengirim dapat mengirimkan data ke channel. 
     package main
 
     import (
         "fmt"
         "time"
     )
-
-    func main() {
-        theMine := [5]string{"ore1", "ore2", "ore3"}
-        oreChan := make(chan string)
-
-        // Finder
-        go func(mine [5]string) {
-            for _, item := range mine {
-                oreChan <- item
-            }
-        }(theMine)
-
-        // Ore breaker
-        go func() {
-            for i := 0; i < 3; i++ {
-                foundOre := <-oreChan
-                fmt.Println("Miner: Received ", foundOre, " from finder")
-            }
-        }()
-
-        <-time.After(time.Second * 5)
-    }
-
     ```
+    ```golang
+    // VERSI: 
+    func main() {
+        ch := make(chan string)
 
-### Ada dua macam penerapan channel di golang :
-1. Buffered Channel
+        sayHello := func(str string) {
+            ch<-str
+            fmt.Println("done ",str)
+        }
+
+        go sayHello("joko")
+        go sayHello("bima")
+
+        // fmt.Println(<-ch)
+        // fmt.Println(<-ch)
+
+        time.Sleep(3*time.Second)
+    }
+    // OUTPUT : *blank
+    // karena unbuffered itu menuggu penerima siap, baru bisa menjalankan pengiriman
+    // tapi disini penerima tidak di buat, sehingga pengiriman tidak dijalankan
+   ```
+2. Buffered Channel
    ```golang
+   // buffered channel (kanal berbuffer) adalah jenis channel yang memungkinkan goroutine pengirim untuk mengirimkan data ke channel tanpa harus menunggu goroutine penerima siap untuk menerima data tersebut.
+    // Jumlah data yang dapat disimpan di dalam buffered channel ditentukan saat deklarasi channel.
+    // Ketika buffered channel penuh, goroutine pengirim akan diblokir sampai ada ruang di dalam channel untuk menampung data yang akan dikirimkan
     package main
 
     import (
         "fmt"
+        "time"
     )
-
-    func main() {
-        message := make(chan string, 2)
-
-        message <- "joko"
-        message <- "wawan"
-
-        fmt.Println(<-message)
-        fmt.Println(<-message)
-    }
    ```
-2. Unbuffered Channel
+   ```golang
+    // VERSI: buffered-1
+    func main() {
+        ch := make(chan string, 2)	// <--- disini kapasitas
+                                    // kapasitas: jumlah data max mampu di tampung channel
+
+        sayHello := func(str string) {
+            ch<-str
+            fmt.Println("done ",str)
+        }
+
+        go sayHello("joko")
+        go sayHello("bima")
+
+        // fmt.Println(<-ch)
+        // fmt.Println(<-ch)
+
+        time.Sleep(3*time.Second)
+    }
+    // OUTPUT : done bima
+    //    		done joko
+    // karena buffered tidak perlu menunggu penerima siap
+    // jadi disini pengiriman tetap dijalankan
+    // meskipun penerima belum siap
+   ```
+   ```golang
+   // VERSI: buffered-2
+    func main() {
+        ch := make(chan string, 2)	// <--- disini kapasitas
+                                    // kapasitas: jumlah data max mampu di tampung channel
+
+        sayHello := func(str string) {
+            ch<-str
+            fmt.Println("done ",str)
+        }
+
+        // pengiriman
+        go sayHello("joko")
+        go sayHello("bima")
+        go sayHello("eko")
+
+        // penerimaan
+        // fmt.Println(<-ch)
+        // fmt.Println(<-ch)
+
+        time.Sleep(3*time.Second)
+    }
+    // OUTPUT : done eko
+    //    		done joko
+    // hanya mengirimkan 2 data sesuai jumlah kapasitasnya
+    // disini bima tidak beruntung sehingga tidak dikirimkan
+    // jika ingin mengirimkan bima, maka harus menjalankan penerimaan
+    // karena setiap penerimaan maka kapasitas channel akan berkurang 1
+    // sehingga memungkinkan bima untuk dikirimkan ke channel
+   ```
 
 <br/>
 
@@ -229,6 +298,7 @@ How to solve race condition :
 
 - Mutex
     ```golang
+    //VERSI: 1
     package main
 
     import (
@@ -269,4 +339,116 @@ How to solve race condition :
 
     //output: 5
     ```
+    ```golang
+    //VERSI: 2
+    // saya memodifikasi soal sehingga menghasilkan program yang...
+    // berjalan dengan multiple go routine yang dimasukan ke dalam looping
+    // karena jika soal dikerjakan dengan 1 go routine maka tidak mungkin terjadi race condition
+    // sehingga penggunaan mutex tidak diperlukan
+    // saya membuat program dimana mutex diperlukan untuk menghindari race condition
+
+    package main
+
+    import (
+        "fmt"
+        "sync"
+    )
+
+    func factorial(n int) int {
+        if n == 0 {
+            return 1
+        }
+        return n * factorial(n-1)
+    }
+
+    func counter(n int, ch chan int, mt *sync.Mutex, wg *sync.WaitGroup) {
+        mt.Lock()
+
+        temp := factorial(n)
+        ch <- temp
+
+        mt.Unlock()
+        wg.Done()
+    }
+
+    func main() {
+        n := []int{4, 5}
+        ch := make(chan int, 2)
+        var wg sync.WaitGroup
+        var mt sync.Mutex
+
+        for _, i := range n {
+            wg.Add(1)
+            go counter(i, ch, &mt, &wg)
+        }
+        wg.Wait()
+        close(ch)
+
+        for result := range ch {
+            fmt.Println(result)
+        }
+    }
+    //OUTPUT: 120
+    //        24
+    ```
+
+<hr>
+
+## Get API
+```golang
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"os"
+)
+
+// A Response struct to map the Entire Response
+type Response struct {
+	Name    string    `json:"name"`
+	Pokemon []Pokemon `json:"pokemon_entries"`
+}
+
+// A Pokemon Struct to map every pokemon to.
+type Pokemon struct {
+	EntryNo int            `json:"entry_number"`
+	Species PokemonSpecies `json:"pokemon_species"`
+}
+
+// A struct to map our Pokemon's Species which includes it's name
+type PokemonSpecies struct {
+	Name string `json:"name"`
+}
+
+func main() {
+	response, err := http.Get("http://pokeapi.co/api/v2/pokedex/kanto/")
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+
+	responseData, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// fmt.Println(string(responseData))
+    // fmt.Println()
+	var responseObject Response
+	json.Unmarshal(responseData, &responseObject)
+    // fmt.Println(responseObject)
+
+	fmt.Println(responseObject.Name)
+	fmt.Println(len(responseObject.Pokemon))
+
+	for _, pokemon := range responseObject.Pokemon {
+		fmt.Println(pokemon.Species.Name)
+	}
+}
+
+```
 
