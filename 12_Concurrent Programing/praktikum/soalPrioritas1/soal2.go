@@ -13,7 +13,6 @@ func main() {
 	go func(n int) {
 		for i := n; i < 100; i++ {
 			if i%n == 0 {
-				fmt.Println("=")
 				ch <- i
 			}
 		}
