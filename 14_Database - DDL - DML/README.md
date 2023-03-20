@@ -7,7 +7,6 @@
 3. **Many to Many.**
    ex: tabel buku dengan tabel author. dimana buku bisa memiliki banyak author dan author bisa memiliki banyak buku
 
-3 perintah dalam database:
+Perintah dalam database:
 1. DDL: data manipulation language adalah mendefinisikan database dan seluruh isi tabel dan relasinya. ini dilakukan pertama kali
 2. DML
-3.  
