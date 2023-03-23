@@ -15,3 +15,8 @@
 <b>Vertical vs Horizontal Scalling:</b>
 - Vertical : mengupgrade spek server
 - Horizontal : mengclone server
+
+<b>Monolithic vs Microservice:</b>
+- Monolithic : menjalankan semua fitur dalam satu server (satu repo)
+- Microservice : memecah fitur-fitur menjadi kecil dan menjalankannya secara terpisah/ independen (beda repo)
+- > monolithic mulai ditinggalkan, sedangkan microservice sedang naik daun 
