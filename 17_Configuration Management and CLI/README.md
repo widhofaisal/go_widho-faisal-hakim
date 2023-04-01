@@ -29,3 +29,18 @@
 - nmap = analisis port yg terbuka
 - ifconfig = memonitor ip 
 - wget -O result.json https://fakestoreapi.com/products = mengunduh isi link dan memasukan ke dalam file bernama result.json
+- telnet : untuk remote server namun kurang aman karena dapat di sniffing dan didapatkan datanya tanpa ada enkripsi
+### About manual:
+- man ls = melihat manual book penggunaan perintah ls dsb
+- echo "Hello Dunia" = menampilkan Hello Dunia
+- echo "Namaku joko" > note.txt = auto create file note.txt dan menuliskan Namaku joko
+- echo "Hobiku mematikan mic" > note.txt = replace line 1 menjadi Hobiku mematikan mic
+- echo "Hobiku mematikan mic" >> note.txt = append line dengan Hobiku mematikan mic
+- date = menampilkan date
+- sudo = mengakses super user/ super domain (root)
+- history = menampilkan history command cli yang pernah dilakukan
+- grep = 
+  <img src="assets/grep.png">
+### About otomatisasi using file .sh:
+- <img src="assets/nano.png">
+- <img src="assets/terminal-sh.png">
