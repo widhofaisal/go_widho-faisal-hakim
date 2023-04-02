@@ -1,34 +1,65 @@
 package main
 
 import (
-  "fmt"
-  "gorm.io/driver/mysql"
-  "gorm.io/gorm"
+	"context"
+	"database/sql"
+	"net/http"
+	"time"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/labstack/echo/v4"
 )
 
-type Product struct {
-  ID    uint `gorm:"primaryKey;default:auto_random()"`
-  Code  string
-  Price uint
+type User struct {
+	Id       int    `json:"id"`
+	Username string `json:"username"`
+}
+
+var DB *sql.DB
+
+func init() {
+	initDB()
 }
 
 func main() {
-  db, err := gorm.Open(mysql.Open("root:@tcp(127.0.0.1:4000)/test"), &gorm.Config{})
-  if err != nil {
-    panic("failed to connect database")
-  }
+	e := echo.New()
 
-  db.AutoMigrate(&Product{})
+	e.GET("/users", GetUserHandler)
 
-  insertProduct := &Product{Code: "D42", Price: 100}
+	e.Start(":10000")
+}
 
-  db.Create(insertProduct)
-  fmt.Printf("insert ID: %d, Code: %s, Prict: %d\n",
-    insertProduct.ID, insertProduct.Code, insertProduct.Price)
+func initDB() {
+	var err error
+	DB, err = sql.Open("mysql", "root@tcp(127.0.0.1:3306)/alterra")
+	if err != nil {
+		panic(err)
+	}
+}
 
-  readProduct := &Product{}
-  db.First(&readProduct, "code = ?", "D42") // find product with code D42
+func GetUserHandler(e echo.Context) error {
+	ctx, cancel := context.WithTimeout((context.Background()), 2*time.Second)
+	defer cancel()
 
-  fmt.Printf("read ID: %d, Code: %s, Prict: %d\n",
-    readProduct.ID, readProduct.Code, readProduct.Price)
+	query := "SELECT id, username FROM users;"
+	rows, err := DB.QueryContext(ctx, query)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	var users []User
+
+	for rows.Next() {
+		user := User{}
+
+		err := rows.Scan(&user.Id, &user.Username)
+		if err != nil {
+			return err
+		}
+
+		users = append(users, user)
+	}
+
+	return e.JSON(http.StatusOK, users)
 }
