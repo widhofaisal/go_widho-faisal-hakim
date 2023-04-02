@@ -74,7 +74,10 @@ func UpdateUserController(c echo.Context) error {
 	for i, value := range users {
 		if value.Id == id {
 			users[i] = user
-			return c.JSON(http.StatusOK, users[i])
+			return c.JSON(http.StatusOK, map[string]interface{}{
+				"message":"success update user",
+				"user":users[i],
+			})
 		}
 	}
 
