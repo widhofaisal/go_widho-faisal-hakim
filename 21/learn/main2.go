@@ -13,7 +13,7 @@ type Product struct {
 }
 
 func main() {
-  db, err := gorm.Open(mysql.Open("root:@tcp(127.0.0.1:4000)/test"), &gorm.Config{})
+  db, err := gorm.Open(mysql.Open("root:@tcp(127.0.0.1:8000)/test"), &gorm.Config{})
   if err != nil {
     panic("failed to connect database")
   }
