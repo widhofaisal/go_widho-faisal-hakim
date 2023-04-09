@@ -31,6 +31,7 @@ func New() *echo.Echo {
 	eJWTBooks.Use(mid.JWT([]byte(constant.SECRET_JWT)))
 	eJWTBooks.GET("/books", controller.GetBooksController)
 	eJWTBooks.GET("/books/:id", controller.GetBookController)
+	eJWTBooks.POST("/books", controller.CreateBookController)
 	eJWTBooks.DELETE("/books/:id", controller.DeleteBookController)
 	eJWTBooks.PUT("/books/:id", controller.UpdateBookController)
 	

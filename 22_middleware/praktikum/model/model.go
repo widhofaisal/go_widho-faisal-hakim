@@ -33,7 +33,7 @@ type Book struct {
 	ID     int    `json:"id" form:"id"`
 	Title  string `json:"title" form:"title"`
 	Author string `json:"author" form:"author"`
-	Year   int    `json:"year" form:"year"`
+	Year   string    `json:"year" form:"year"`
 }
 
 // model struct dibawah ini hanya menjadikan FK tanpa menerapkan behaviornya
