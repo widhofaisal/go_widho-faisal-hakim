@@ -1,0 +1,3 @@
+```Redis
+KEYS *user*
+```
