@@ -1,0 +1,2 @@
+My username: tegarimansyah
+With host: jokobuntu-VirtualBox #39~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Fri Mar 17 21:16:15 UTC 2 Linux 5.19.0-38-generic x86_64
