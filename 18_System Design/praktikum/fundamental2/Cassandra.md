@@ -1,0 +1,3 @@
+```Cassandra
+SELECT * FROM users
+```
